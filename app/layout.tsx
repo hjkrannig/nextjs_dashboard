@@ -4,7 +4,10 @@ import { inter } from "./ui/fonts";
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>{children}</body>
+      {/* <body className={`${inter.className} antialiased `}> */}
+      <body className={`${inter.className} antialiased w-[95%] mx-auto bg-slate-100`}>
+        {children}
+      </body>
     </html>
   );
 }
