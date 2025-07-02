@@ -6,6 +6,7 @@ import { lusitana } from "@/app/ui/common/fonts";
 import { InvoicesTableSkeleton } from "@/app/ui/common/skeletons";
 import { Suspense } from "react";
 import { SearchParamsT } from "@/app/lib/definitions";
+import { fetchInvoicesPages } from "@/app/lib/data";
 
 export default async function Invoices({
   searchParams,
@@ -14,6 +15,7 @@ export default async function Invoices({
 }) {
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
+  const totalPages = await fetchInvoicesPages(query);
   return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
@@ -27,7 +29,7 @@ export default async function Invoices({
         <Table query={query} currentPage={currentPage} />
       </Suspense>
       <div className="mt-5 flex w-full justify-center">
-        {/* <Pagination totalPages={totalPages} /> */}
+        <Pagination totalPages={totalPages} />
       </div>
     </div>
   );

@@ -17,6 +17,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
     // console.log("invoices.search=>Serching: ", search);
     if (search) {
       params.set(SearchKey, search);
+      params.set("page", "1"); // reset page-number for new search
     } else {
       params.delete(SearchKey);
     }
