@@ -1,7 +1,7 @@
 import { generateYAxis } from "@/app/lib/utils";
 import { CalendarIcon } from "@heroicons/react/24/outline";
 import { lusitana } from "@/app/ui/fonts";
-import { Revenue } from "@/app/lib/definitions";
+import { fetchRevenue } from "@/app/lib/data";
 
 // This component is representational only.
 // For data visualization UI, check out:
@@ -9,9 +9,15 @@ import { Revenue } from "@/app/lib/definitions";
 // https://www.chartjs.org/
 // https://airbnb.io/visx/
 
-export default async function RevenueChart({ revenue }: { revenue: Revenue[] }) {
+/**
+ *
+ * @returns the RevenueChart. This component is suspended with a fallback-skeleton in dashboard.tsx.
+ * By doing it that way, only this component needs a loading indicator = skeleton, while the other ones
+ * are nicely beeing shown immediatly.
+ */
+export default async function RevenueChart() {
+  const revenue = await fetchRevenue();
   const chartHeight = 350;
-
   const { yAxisLabels, topLabel } = generateYAxis(revenue);
 
   if (!revenue || revenue.length === 0) {
