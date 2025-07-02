@@ -3,12 +3,18 @@
 
 ### Chapter 1  Installation
 Install sugested package-manager
-  - sudo npm install -g pnpm
+
+- sudo npm install -g pnpm
 
 Install starter-files
-  - npx create-next-app@latest nextjs-dashboard --example 
+
+- npx create-next-app@latest nextjs-dashboard --example 
     "https://github.com/vercel/next-learn/tree/main/dashboard/starter-example" 
     --use-pnpm
+
+Adding more packages
+
+  - pnpm i use-debounce
 
 Url at github
   - git@github.com:hjkrannig/nextjs_dashboard.git
@@ -140,6 +146,28 @@ Promise like
   - [DATA1, DATA2, DATA3]=Promise.all([fetch1, fetch2, fetch3)
 
 
-### Chapter 10 
-### Chapter 11
-### Chapter 12 
+### Chapter 10 PartialPreRendering
+PPR is a experimental feature from next@canary. It allows the pre-rendering of pages
+with Suspended-Components, which are ready-rendered in the state of loading. When
+the data is fetched, the content will be replaced with the dynamic part included.
+To use this feature, e.g in the dashboard.page.ts there are several steps to be done
+  - pnpm install next@canary
+  - edit the next.config.ts like the code-example below
+  - in dashboard.layout.ts "export const experimental_ppr=true"
+
+``` next.config.ts
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
+  experimental: {
+    ppr: 'incremental'
+  }
+};
+
+export default nextConfig;
+```
+
+### Chapter 11 Search and Pagination
+
+
+### Chapter
