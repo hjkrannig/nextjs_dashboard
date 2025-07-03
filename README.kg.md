@@ -168,6 +168,70 @@ export default nextConfig;
 ```
 
 ### Chapter 11 Search and Pagination
+#### Using the hooks in client-component
 
+In here the use of useSearchParams, usePathname and useRouter is explained. 
+The useSearchParams() gives access to the query-string of the url. It is to be
+used with  URLSearchParams() as (search.ts): 
+  - const searchParams=useSearchParams()
+  - const params= URLSearchParams(searchParams)
+  - params.set(queryKey, queryValue)
+  - params.delete(queryKey)
+Now, having a params-object usePathname and useRoute comes into play
+  - pathname = usePathname()
+  - {replace}= useRouter()
+And now updating the url and routing to as:
+  - replace(`${pathname}?${params.toString()}`)
 
-### Chapter
+When using the hooks, the Component is to be set as
+  - "use client"
+
+#### Using the server-side to get to searchParams
+Only the page.ts itsself has server-side-access to searchParams as 
+
+```
+export default async function Page(props: {
+  searchParams?: Promise<{
+    query?: string;
+    page?: string;
+  }>;
+}) {
+  const searchParams = await props.searchParams;
+  const query = searchParams?.query || '';
+  const currentPage = Number(searchParams?.page) || 1;
+```
+These properties can now be drilled down to all components needing them
+
+#### Using Debouncing
+When typing the search in the search.input, by using onChange() every type-click
+will force a new DB-request. This is not intended!
+My way to solve this problem is to work with forms, submit and formdata or e.currentTarget. This provides a search on every return-press and feels good.
+A more specific way is to use debounced function-call. This means, that there is a 
+timeout calling the intended handler-function. As long as typing, every click sets 
+the timer back to 0. When there is a pause or no more typing longer than the timeout,
+the handler-callback is called and executed. There is a lib for doing so as:
+  - pnpm i use-debounce
+  - import {useDebouncedCallback } from "use-debounce"
+  - const handler = UseDebouncedCallback(){...}
+
+#### Using Pagination
+Pagination is done in a few steps: getting the current-page from url-query 
+in page.tsx, fetching the totalPages with the actual query with a count-request 
+to the db, setting the desired page in the user-interface into the url and 
+fetch the current-page-data as:
+  - const currentPage = Number(searchParams?.page || 1
+  - const totalPages = await(fetchInvoicesPages(query)
+  - fetch the first page and build the page-ui Pagination
+  - in here calculate the new URL after every click on the Pagination-Buttons:
+
+```
+  const createPageURL = (pageNumber: number | string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', pageNumber.toString());
+    return `${pathname}?${params.toString()}`;
+  };
+```
+This new calculated URL leads to fetching the correct data as:
+  -  const invoices = await fetchFilteredInvoices(query, currentPage);
+
+### Chapter 12

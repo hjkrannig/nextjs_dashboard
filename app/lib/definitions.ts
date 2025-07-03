@@ -9,13 +9,6 @@ export type User = {
   password: string;
 };
 
-export type CardDataT = {
-  numberOfCustomers: number;
-  numberOfInvoices: number;
-  totalPaidInvoices: string;
-  totalPendingInvoices: string;
-};
-
 export type Customer = {
   id: string;
   name: string;
@@ -94,7 +87,16 @@ export type InvoiceForm = {
   status: "pending" | "paid";
 };
 
+// additional types by kg
+
 export type SearchParamsT = {
   query?: string;
   page?: string;
+};
+
+export type CardDataT = {
+  numberOfCustomers: number;
+  numberOfInvoices: number;
+  totalPaidInvoices: string;
+  totalPendingInvoices: string;
 };
