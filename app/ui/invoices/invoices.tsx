@@ -6,7 +6,7 @@ import { lusitana } from "@/app/ui/common/fonts";
 import { InvoicesTableSkeleton } from "@/app/ui/common/skeletons";
 import { Suspense } from "react";
 import { SearchParamsT } from "@/app/lib/definitions";
-import { fetchInvoicesPages } from "@/app/lib/data";
+import { fetchInvoicesPages } from "@/app/lib/dbget";
 
 export default async function Invoices({
   searchParams,

@@ -2,7 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import z from "zod";
-import { createInvoiceDB } from "./postdb";
+import { createInvoiceDB } from "./dbpost";
 
 const redirectPath = "/dashboard/invoices";
 const FormSchemaZ = z.object({
