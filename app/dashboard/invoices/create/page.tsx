@@ -1,6 +1,14 @@
-import Form from "@/app/ui/invoices/create-form";
+import Form from "@/app/ui/invoices/form";
 import Breadcrumbs from "@/app/ui/invoices/breadcrumbs";
 import { fetchCustomers } from "@/app/lib/dbget";
+import { InvoiceForm } from "@/app/lib/definitions";
+
+const defaultInvoice: InvoiceForm = {
+  id: "",
+  customer_id: "",
+  amount: 0,
+  status: "pending",
+};
 
 export default async function Page() {
   const customers = await fetchCustomers();
@@ -17,7 +25,7 @@ export default async function Page() {
           },
         ]}
       />
-      <Form customers={customers} />
+      <Form type="create" customers={customers} invoice={defaultInvoice} />
     </main>
   );
 }
