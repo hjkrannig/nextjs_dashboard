@@ -15,7 +15,10 @@ export type State = {
 
 const FormSchemaZ = z.object({
   id: z.string(),
-  customerId: z.string({ required_error: "Please select a customer." }),
+  customerId: z.string({
+    required_error: "Please select a customer.",
+    invalid_type_error: "Not a string",
+  }),
   amount: z.coerce.number().gt(0, { message: "Please enter an amount greater than $0." }),
   status: z.enum(["pending", "paid"], {
     invalid_type_error: "Please select an invoice status",
@@ -40,6 +43,7 @@ export const createInvoice = async (prevState: State, formData: FormData) => {
     await createInvoiceDB(customerId, amount, status);
   } catch (error) {
     console.log(error);
+    return { message: "The invoice could not be created. Database failed!" };
   }
   revalidatePath(redirectPath);
   redirect(redirectPath);
@@ -60,6 +64,9 @@ export const updateInvoice = async (id: string, prevState: State, formData: Form
     await updateInvoiceDB(id, customerId, amount, status);
   } catch (error) {
     console.log(error);
+    return {
+      message: "The invoice could not be updated...invoiceId manipulated? Database failed!",
+    };
   }
   revalidatePath(redirectPath);
   redirect(redirectPath);

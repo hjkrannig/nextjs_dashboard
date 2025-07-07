@@ -275,5 +275,90 @@ Up here data can be fetched in the same manner as with searchParams.
 - uncaught errors can be responded by rendering the errer.tsx-page (nearest page in path)
 - the 404 can be handled with  notFound from next/navigation and corresponding not-found.tsx
 
-### Chapter 14 Improving Accessibility
+### Chapter 14 Improving Accessibility == Form Validation
+
+#### HTML validation
+- simple form-validation is to add the required-prop in the form-field. This will cause a client-side
+  validation with a browser-generated error-message
+
+#### zod Validation in actions.ts
+- define a type State and a zod-schema as:
+```
+export type State = {
+  errors?: {
+    customerId?: string[];
+    amount?: string[];
+    status?: string[];
+  };
+  message?: string | null;
+};
+
+const FormSchemaZ = z.object({
+  id: z.string(),
+  customerId: z.string({
+    required_error: "Please select a customer.",
+    invalid_type_error: "Not a string",
+  }),
+  amount: z.coerce.number().gt(0, { message: "Please enter an amount greater than $0." }),
+  status: z.enum(["pending", "paid"], {
+    invalid_type_error: "Please select an invoice status",
+  }),
+  date: z.string(),
+});
+```
+- the schema-validation-definitions have changed in zod@4, so by using zod@4 a check of the 
+  documents is required.
+- get the validatedFields-Object from safeParse, check for error and when passed post to the DB
+
+```
+export const createInvoice = async (prevState: State, formData: FormData) => {
+ const validatedFields = CreateInvoice.safeParse(Object.fromEntries(formData));
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to Create Invoice",
+    };
+  }
+  const { customerId, amount, status } = validatedFields.data;
+  try
+  ...
+}
+```
+
+#### Form-Validation in form with useActionState-hook from React
+- import the type StateT from action.ts
+- get the state from the useActionState-hook and implement the error-blocks in the form. 
+- The callback of the action-prop of the form is the "callAction" from the hook
+
+```
+const formDataState: State = { message: null, errors: {} };
+const formAction = type === "create" ? createInvoice : updateInvoiceWithId;
+const [state, callAction] = useActionState(formAction, formDataState);
+
+```
+- An Example for the Error-Block-Component to be placed under the formfield is
+```
+type StateFieldT = string[] | undefined;
+function ErrorMessage({ id, stateField }: { id: string; stateField: StateFieldT }) {
+  return (
+    <div id={id} aria-live="polite" aria-atomic="true">
+      {stateField &&
+        stateField.map((error: string) => (
+          <p className="mt-2 text-sm text-red-500" key={error}>
+            {error}
+          </p>
+        ))}
+    </div>
+  );
+}
+```
+
+- Placed under the amount-field:
+```
+<ErrorMessage id="amount-error" stateField={state.errors?.amount} />
+```
+
+
+
+
 ### Chapter 15
