@@ -3,6 +3,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev --turbopack",
+    "lint": "next lint",
     "start": "next start"
   },
   "dependencies": {
@@ -26,6 +27,7 @@
     "@types/react": "19.0.7",
     "@types/react-dom": "19.0.3",
     "autoprefixer": "10.4.20",
+    "eslint-config-next": "15.3.5",
     "postcss": "8.5.1",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.13",

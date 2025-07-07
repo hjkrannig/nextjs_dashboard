@@ -9,8 +9,8 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { Button } from "@/app/ui/common/button";
-import { createInvoice, updateInvoice } from "@/app/lib/actions";
-import { useRouter } from "next/navigation";
+import { createInvoice, updateInvoice, State } from "@/app/lib/actions";
+import { useActionState } from "react";
 
 type FormPropsT = {
   type: "edit" | "create";
@@ -19,15 +19,19 @@ type FormPropsT = {
 };
 
 export default function Form({ type, invoice, customers }: FormPropsT) {
-  const router = useRouter();
   const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
-
+  const formDataState: State = { message: null, errors: {} };
+  const formAction = type === "create" ? createInvoice : updateInvoiceWithId;
+  const [state, callAction] = useActionState(formAction, formDataState);
   return (
-    <form action={type === "create" ? createInvoice : updateInvoiceWithId}>
+    <form action={callAction} aria-describedby="form-error">
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        <InvoiceCustomerName customers={customers} invoice={invoice} />
-        <InvoiceAmount invoice={invoice} />
-        <InvoiceStatus invoice={invoice} />
+        <SelectInputCustomer customers={customers} invoice={invoice} state={state} />
+        <NumberInputAmount invoice={invoice} state={state} />
+        <SelectOptionStatus invoice={invoice} state={state} />
+      </div>
+      <div id="form-error" aria-live="polite" aria-atomic="true">
+        {state.message && <p className="mt-2 text-sm text-red-500">{state.message}</p>}
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
@@ -42,7 +46,7 @@ export default function Form({ type, invoice, customers }: FormPropsT) {
 }
 
 /* Invoice Status */
-function InvoiceStatus({ invoice }: { invoice: InvoiceForm }) {
+function SelectOptionStatus({ invoice, state }: { invoice: InvoiceForm; state: State }) {
   return (
     <fieldset>
       <legend className="mb-2 block text-sm font-medium">Set the invoice status</legend>
@@ -52,8 +56,8 @@ function InvoiceStatus({ invoice }: { invoice: InvoiceForm }) {
             <input
               id="pending"
               name="status"
-              type="radio"
               value="pending"
+              type="radio"
               defaultChecked={invoice.status === "pending"}
               className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
             />
@@ -85,7 +89,8 @@ function InvoiceStatus({ invoice }: { invoice: InvoiceForm }) {
 }
 
 /* Invoice Amount */
-function InvoiceAmount({ invoice }: { invoice: InvoiceForm }) {
+function NumberInputAmount({ invoice, state }: { invoice: InvoiceForm; state: State }) {
+  const { amount } = invoice;
   return (
     <div className="mb-4">
       <label htmlFor="amount" className="mb-2 block text-sm font-medium">
@@ -98,24 +103,28 @@ function InvoiceAmount({ invoice }: { invoice: InvoiceForm }) {
             name="amount"
             type="number"
             step="0.01"
-            defaultValue={invoice.amount}
+            defaultValue={amount > 0 ? amount : ""}
             placeholder="Enter USD amount"
             className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+            aria-describedby="amount-error"
           />
           <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
         </div>
+        <ErrorMessage id="amount-error" stateField={state.errors?.amount} />
       </div>
     </div>
   );
 }
 
 /* Customer Name */
-function InvoiceCustomerName({
+function SelectInputCustomer({
   invoice,
   customers,
+  state,
 }: {
   invoice: InvoiceForm;
   customers: CustomerField[];
+  state: State;
 }) {
   return (
     <div className="mb-4">
@@ -126,8 +135,9 @@ function InvoiceCustomerName({
         <select
           id="customer"
           name="customerId"
+          defaultValue={invoice.customer_id}
           className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-          defaultValue={invoice.customer_id}>
+          aria-describedby="customer-error">
           <option value="" disabled>
             Select a customer
           </option>
@@ -139,6 +149,21 @@ function InvoiceCustomerName({
         </select>
         <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
       </div>
+      <ErrorMessage id="customer-error" stateField={state.errors?.customerId} />
+    </div>
+  );
+}
+
+type StateFieldT = string[] | undefined;
+function ErrorMessage({ id, stateField }: { id: string; stateField: StateFieldT }) {
+  return (
+    <div id={id} aria-live="polite" aria-atomic="true">
+      {stateField &&
+        stateField.map((error: string) => (
+          <p className="mt-2 text-sm text-red-500" key={error}>
+            {error}
+          </p>
+        ))}
     </div>
   );
 }

@@ -241,6 +241,7 @@ This new calculated URL leads to fetching the correct data as:
 
 - const invoices = await fetchFilteredInvoices(query, currentPage);
 
+
 ### Chapter 12 Updating data, ServerActions, FormData, dynamic route
 
 #### Server Actions
@@ -267,3 +268,12 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
   const id = params.id;
 ```
 Up here data can be fetched in the same manner as with searchParams.
+
+
+### Chapter 13 Error-handling, try--catch, error.tsx, notFound from next/navigation and not-found.tsx
+- Error-prone code should be wrapped in try-catch-block
+- uncaught errors can be responded by rendering the errer.tsx-page (nearest page in path)
+- the 404 can be handled with  notFound from next/navigation and corresponding not-found.tsx
+
+### Chapter 14 Improving Accessibility
+### Chapter 15
