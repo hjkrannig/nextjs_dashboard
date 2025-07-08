@@ -364,3 +364,28 @@ function ErrorMessage({ id, stateField }: { id: string; stateField: StateFieldT 
 - pnpm i next-auth
 - openssl rand -base64 32
   - Fe2kWWeJ2jsuDNtQSa6/5/8mQYRY7tAcrcNsRB5kd7U=
+
+- an next-auth beteiligte neue module sind
+- auth.config.ts
+  - defines the custom signIn-page, the authorized-callback which redirects the
+    authorized user to the desired page and the providers (auth-providers), like
+    next-credentials, google, github etc....
+
+- auth.ts
+  - defines the authorize-callback for the given provider. Here it is only 
+    Credentials. The authorize will be called in the authenticate-function
+    from action.ts, which is the action for form.action in login-form
+
+- middleware.ts
+  - exports a config.object, which holds the routes to be protected, and as
+    default export NextAuth from "next-auth". Here the config-object from 
+    auth.config.ts is used.
+
+- action.ts
+  - defines the authenticate-function, which is the action in edit-form. It
+    uses the signIn-function exported from auth.ts
+
+- login-form.tsx
+  - here the form.action is called, the FormData-object holds email and password
+    and the error-handling is managed.
+
