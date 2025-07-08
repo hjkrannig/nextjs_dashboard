@@ -4,6 +4,7 @@ import { redirect, RedirectType } from "next/navigation";
 import z from "zod";
 import { createInvoiceDB, updateInvoiceDB, deleteInvoiceDB } from "./dbpost";
 import { signIn } from "@/auth";
+import { AuthError } from "next-auth";
 
 export type State = {
   errors?: {
@@ -84,15 +85,18 @@ export const deleteInvoice = async (id: string) => {
   revalidatePath(redirectPath);
 };
 
-export const authenticate = async (prevState: string | undefined, formData: FormData) => {
+export async function authenticate(prevState: string | undefined, formData: FormData) {
   try {
     await signIn("credentials", formData);
-  } catch (error: any) {
-    if (error?.type === "CredentialsSignin") {
-      return "Invalid credentials";
-    } else {
-      console.log(error);
-      return "Something went wrong!";
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return "Invalid credentials.";
+        default:
+          return "Something went wrong.";
+      }
     }
+    throw error;
   }
-};
+}
