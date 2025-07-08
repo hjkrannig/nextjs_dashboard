@@ -11,11 +11,10 @@ Install starter-files
 - npx create-next-app@latest nextjs-dashboard --example "https://github.com/vercel/next-learn/tree/main/dashboard/starter-example" --use-pnpm
 
 Adding more packages
-
 - pnpm i use-debounce
+- pnpm i next-auth
 
 Url at github
-
 - git@github.com:hjkrannig/nextjs_dashboard.git
 
 ### Chapter 2 Styling
@@ -362,3 +361,6 @@ function ErrorMessage({ id, stateField }: { id: string; stateField: StateFieldT 
 
 
 ### Chapter 15
+- pnpm i next-auth
+- openssl rand -base64 32
+  - Fe2kWWeJ2jsuDNtQSa6/5/8mQYRY7tAcrcNsRB5kd7U=

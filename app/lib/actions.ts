@@ -3,6 +3,7 @@ import { revalidatePath } from "next/cache";
 import { redirect, RedirectType } from "next/navigation";
 import z from "zod";
 import { createInvoiceDB, updateInvoiceDB, deleteInvoiceDB } from "./dbpost";
+import { signIn } from "@/auth";
 
 export type State = {
   errors?: {
@@ -81,4 +82,17 @@ export const deleteInvoice = async (id: string) => {
     console.log(error);
   }
   revalidatePath(redirectPath);
+};
+
+export const authenticate = async (prevState: string | undefined, formData: FormData) => {
+  try {
+    await signIn("credentials", formData);
+  } catch (error: any) {
+    if (error?.type === "CredentialsSignin") {
+      return "Invalid credentials";
+    } else {
+      console.log(error);
+      return "Something went wrong!";
+    }
+  }
 };
