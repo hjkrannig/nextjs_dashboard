@@ -40,7 +40,7 @@ export default function LoginForm() {
 }
 
 function FormInputEmail() {
-  const email = "user@nextmail.com";
+  const email = ""; // "user@nextmail.com";
   return (
     <div>
       <label className="mb-3 mt-5 block text-xs font-medium text-gray-900" htmlFor="email">
@@ -63,7 +63,7 @@ function FormInputEmail() {
 }
 
 function FormInputPassword() {
-  const password = "123456";
+  const password = ""; //"123456";
   return (
     <div className="mt-4">
       <label className="mb-3 mt-5 block text-xs font-medium text-gray-900" htmlFor="password">

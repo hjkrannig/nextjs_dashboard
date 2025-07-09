@@ -360,7 +360,7 @@ function ErrorMessage({ id, stateField }: { id: string; stateField: StateFieldT 
 
 
 
-### Chapter 15
+### Chapter 15 Authentication and Authorization
 - pnpm i next-auth
 - openssl rand -base64 32
   - Fe2kWWeJ2jsuDNtQSa6/5/8mQYRY7tAcrcNsRB5kd7U=
@@ -389,3 +389,29 @@ function ErrorMessage({ id, stateField }: { id: string; stateField: StateFieldT 
   - here the form.action is called, the FormData-object holds email and password
     and the error-handling is managed.
 
+### Chapter 16 Metadata
+- in app.layout systemwide metadata can be defined. The title:{...} is a blueprint,
+  that takes the page.title.metadata and places it before the default like
+
+- in app.layout
+``` 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: {
+    template: "%s | Acme Dashboard",
+    default: "Acme Dashboard",
+  },
+  description: "The official Next.js Learn Dashboard built with App Router.",
+  metadataBase: new URL("https://next-learn-dashboard.vercel.sh"),
+};
+```
+- in invoices.page
+``` 
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Invoices",
+};
+```
+- leads to "Invoices | Acme Dashboard"
