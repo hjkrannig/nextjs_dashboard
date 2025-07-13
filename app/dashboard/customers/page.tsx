@@ -14,7 +14,7 @@ type PropsT = {
 
 export default async function Page(props: PropsT) {
   const searchParams = await props.searchParams;
-  console.log("customers.page", searchParams);
+  // console.log("customers.page", searchParams);
   const query = searchParams?.query || "";
   const customers = await fetchFilteredCustomers(query);
   return <Customers customers={customers} />;
