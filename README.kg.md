@@ -365,7 +365,12 @@ function ErrorMessage({ id, stateField }: { id: string; stateField: StateFieldT 
 - openssl rand -base64 32
   - Fe2kWWeJ2jsuDNtQSa6/5/8mQYRY7tAcrcNsRB5kd7U=
 
-- an next-auth beteiligte neue module sind
+- next-auth modules participating:
+
+- .env
+  - AUTH_SECRET and AUTH_URL
+  - both have to be set in the vercel-environment as well!
+
 - auth.config.ts
   - defines the custom signIn-page, the authorized-callback which redirects the
     authorized user to the desired page and the providers (auth-providers), like
@@ -388,6 +393,7 @@ function ErrorMessage({ id, stateField }: { id: string; stateField: StateFieldT 
 - login-form.tsx
   - here the form.action is called, the FormData-object holds email and password
     and the error-handling is managed.
+  - a hidden field holds the "next-url" string for the url-query
 
 ### Chapter 16 Metadata
 - in app.layout systemwide metadata can be defined. The title:{...} is a blueprint,
