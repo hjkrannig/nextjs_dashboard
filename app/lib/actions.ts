@@ -86,6 +86,7 @@ export const deleteInvoice = async (id: string) => {
 };
 
 export async function authenticate(prevState: string | undefined, formData: FormData) {
+  console.log("actions.authenticate.formData: ", formData);
   try {
     await signIn("credentials", formData);
   } catch (error) {

@@ -39,4 +39,13 @@ export const { auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
+  callbacks: {
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs in your application.
+      if (url.startsWith(baseUrl)) return url;
+      // Allows callback URLs on the same origin.
+      else if (url.startsWith("/")) return new URL(url, baseUrl).toString();
+      return baseUrl;
+    },
+  },
 });
